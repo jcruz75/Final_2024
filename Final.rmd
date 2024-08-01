@@ -23,6 +23,7 @@ FinalData$treatment <- relevel(FinalData$treatment,ref="placebo")
 M = filter(FinalData, sex =="M")
 F = filter(FinalData, sex =="F")
 LGBTQ = filter(FinalData, LGBTQ =="gay")
+DrugUser = filter(FinalData, DrugUser =="yes")
 ```
 
 # Introduction
@@ -31,16 +32,143 @@ A new  preventative vaccine (covid921) is under test in clinical trials. Given t
 
 ## Males
 
+## Barplot
 
+```{r}
+dd2 <- M %>% group_by(infected,treatment) %>% summarize(count=n()) %>% mutate(prcnt=count/sum(count))
+
+
+# the group_by followed by summarize(count=n())
+
+basicC <- ggplot(dd2,aes(x=infected,y=count,fill=treatment))
+basicC + geom_bar(stat="identity",position="dodge")
+
+#Now for percentage plot
+
+basicCC <- ggplot(dd2,aes(x=infected,y=prcnt*100,fill=treatment)) 
+basicCC + geom_bar(stat="identity", position = "dodge")
+```
+
+
+With the addition of this graph we can clearly see that those that are male only, infected, and whether they did or did not receive the vaccine or a placebo vary drastically. Those who are "OK"  whether they received the vaccine or the placebo have the same percentage of people infected. Whereas the males who do have covid 19 and received the vaccine had a lower infected count around 25-30 and those who have covid 19 and only have the placebo have the highest infection count of 60+. 
+
+To make the graphs easier to interpret we can see the x-axis consists of whether the male is ok or has covid 19 and the y-axis shows the percentage count of those infected. Both graphs show how there is a large percentage graph in the male being "ok" and infected and whether they have the vaccine or the placebo they are leveled evenly. On the other hand in both graphs we can see that the covid 19 category shows a gap as those with the vaccine have a lower percentile compared to those with the placebo. 
+
+The codes that  create this plot start with the code block beginning with dd2. dd2 can be seen in the environment panel and if inspected contains 4 variables.These variables include infected, treatment, count, and prcent(stands for percent). The second group of codes is called the basicC. BasicC can also be seen in the environment pane and appears to contain a list of 9 variables. This information creates the first plot. The basicCC is the last bunch of codes and is also in the files pane. It also contains 9 variables and helps to create the percentage plot, the second plot.
+
+## Numerical Results
+
+```{r}
+table1 <- xtabs(~infected + treatment, data=M)
+rowPerc(table1)
+colPerc(table1)
+```
+
+These numerical results give us a better look at the percentages and show who did and didn't contract covid 19. The first set of numbers show us how 26.20% of males who did receive the vaccine are the only non-infected whereas the other 73.80% only received the placebo and were infected.  
+
+## Inferential 
+
+```{r}
+chisq.test(table1)
+chisqtestGC(table1)
+Mfish <- fisher.test(table1)
+Mfish
+```
+
+This fisher test shows us the p-value is 2.2e-16 which is extremely low. Seeing this number means that these results are not likely to occur by chance. 
+
+## Effectiveness Confidence Interval `r low`  to `r hi`
+
+```{r}
+effect <- Mfish$p.value/(Mfish$p.value +1)
+effectivenessM = Mfish$estimate/(Mfish$estimate +1)*100
+print(effectivenessM)
+```
+
+```{r}
+low=(Mfish$conf.int[1]/(Mfish$conf.int[1] +1))*100
+hi=(Mfish$conf.int[2]/(Mfish$conf.int[2] +1))*100
+options(digits=2)
+```
+
+Above is the effectiveness for the covid-19 vaccine for guys(males). If the effectiveness is above 50% that means that the vaccine is effective. Seeing that the odds are 73.79183 we can conclude that the vaccine in males is highly effective. 
 
 ## Females
+
+## BarPlot 
+
+```{r}
+dd2 <- F %>% group_by(infected,treatment) %>% summarize(count=n()) %>% mutate(prcnt=count/sum(count))
+
+
+# the group_by followed by summarize(count=n())
+
+basicC <- ggplot(dd2,aes(x=infected,y=count,fill=treatment))
+basicC + geom_bar(stat="identity",position="dodge")
+
+#Now for percentage plot
+
+basicCC <- ggplot(dd2,aes(x=infected,y=prcnt*100,fill=treatment)) 
+basicCC + geom_bar(stat="identity", position = "dodge")
+```
+
+Much like the graph for Males, the Females graph shows how between the "ok" group whether they have the vaccine or placebo they are equal in percentile of being infected. The "covid 19" group also displays much of the same information as those with the vaccine have a lower percentile of infection whereas those with the placebo dominant the higher side of the percentile. 
+
+The numbers show that there as even distribution in the "ok"' group of 50/50. The "covid 19" displays a bigger gap of an estimated percentile split of 30% with the vaccine having covid 19 and the other 70% goes to the placebo group.  
+
+The codes that  create this plot start with the code block beginning with dd2. dd2 can be seen in the environment pane and if inspected contains 4 variables.These variables include infected, treatment, count, and prcent(stands for percent). The second group of codes is called the basicC. BasicC can also be seen in the environment pane and appears to contain a list of 9 variables. This information creates the first plot. The basicCC is the last bunch of codes and is also in the files pane. It also contains 9 variables and helps to create the percentage plot, the second plot.
+
+## Numerical Results
+
+```{r}
+table1 <- xtabs(~infected + treatment, data=F)
+rowPerc(table1)
+colPerc(table1)
+```
+
+Now with the numerical results we can a get more precise look at the numbers as out of the 100 infected and whether they received covid 19 or not we can see only 35 with the vaccine got infected and the rest of the 65 with a placebo did get infected. The ok group shows an even split of 50/50. 
+
+## Inferential 
+
+```{r}
+chisq.test(table1)
+chisqtestGC(table1)
+Ffish <- fisher.test(table1)
+Ffish
+```
+
+With the fisher test we can see the p-value is 2e-16 which means the results are extremely to unlikely to occur by chance and we can reject the null hypothesis and accept the alternative hypothesis. The odds being 2.8 show that the vaccine is extremely effective among females 
+
+
+## Effectiveness Confidence Interval `r low`  to `r hi`
+
+
+```{r}
+effect <- Ffish$p.value/(Ffish$p.value +1)
+effectivenessgays = Ffish$estimate/(Ffish$estimate +1)*100
+print(effectivenessF)
+```
+
+```{r}
+low=(Ffish$conf.int[1]/(Ffish$conf.int[1] +1))*100
+hi=(Ffish$conf.int[2]/(Ffish$conf.int[2] +1))*100
+options(digits=2)
+```
+
+
+
+
+
+
 
 
 ## LGBTQ
 
 
 
+
 ## Druggies
+
 
 
 # Overall Results and Conclusions
