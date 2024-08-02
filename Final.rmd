@@ -75,7 +75,7 @@ Mfish <- fisher.test(table1)
 Mfish
 ```
 
-This fisher test shows us the p-value is 2.2e-16 which is extremely low. Seeing this number means that these results are not likely to occur by chance. 
+This fisher test shows us the p-value is 2.2e-16 which is extremely small. Seeing this number means that these results are not likely to occur by chance. 
 
 ## Effectiveness Confidence Interval `r low`  to `r hi`
 
@@ -145,7 +145,7 @@ With the fisher test we can see the p-value is 2e-16 which means the results are
 
 ```{r}
 effect <- Ffish$p.value/(Ffish$p.value +1)
-effectivenessgays = Ffish$estimate/(Ffish$estimate +1)*100
+effectivenessF = Ffish$estimate/(Ffish$estimate +1)*100
 print(effectivenessF)
 ```
 
@@ -155,20 +155,170 @@ hi=(Ffish$conf.int[2]/(Ffish$conf.int[2] +1))*100
 options(digits=2)
 ```
 
+The odds ratio being 70 this shows the effectiveness of the vaccine 
 
-
-
+With all this data we can see the covid 19 vaccine is highly effective in females. 
 
 
 
 
 ## LGBTQ
 
+## Barplot
 
+```{r}
+dd2 <- LGBTQ %>% group_by(infected,treatment) %>% summarize(count=n()) %>% mutate(prcnt=count/sum(count))
+
+
+# the group_by followed by summarize(count=n())
+
+basicC <- ggplot(dd2,aes(x=infected,y=count,fill=treatment))
+basicC + geom_bar(stat="identity",position="dodge")
+
+#Now for percentage plot
+
+basicCC <- ggplot(dd2,aes(x=infected,y=prcnt*100,fill=treatment)) 
+basicCC + geom_bar(stat="identity", position = "dodge")
+```
+
+This plot represents the population of gay people and the relationship to the contraction of covid-19 by taking either the vaccine or the placebo.
+
+With this graph we can see the drastic gap in the covid 19 section and a slight difference in the ok section
+
+With the covid 19 section we can see out of 100 only 20 percent with the vaccine got infected whereas 80 percent with the placebo did get infected. 
+
+In the ok section there is a slight difference between the vaccine and the placebo of 45/55 percent. 
+
+The codes that  create this plot start with the code block beginning with dd2. dd2 can be seen in the environment pane and if inspected contains 4 variables.These variables include infected, treatment, count, and prcent(stands for percent). The second group of codes is called the basicC. BasicC can also be seen in the environment pane and appears to contain a list of 9 variables. This information creates the first plot. The basicCC is the last bunch of codes and is also in the files pane. It also contains 9 variables and helps to create the percentage plot, the second plot.
+
+## Numerical 
+
+```{r}
+table1 <- xtabs(~infected + treatment, data=LGBTQ)
+rowPerc(table1)
+colPerc(table1)
+```
+
+With the numerical results we can see a more precise calculation of LGBTQ individuals subbed into the either ok or covid 19 group and whether they have the placebo or the vaccine.  
+
+As we can see if they have covid 19 and the vaccine only 20 percent get infected whereas those with the placebo have a percentage of 80 percent.
+
+The ok category shows a split of 48/52 so those with the placebo barely have a lesser chance than those with the vaccine. 
+
+## Inferential 
+
+
+```{r}
+chisq.test(table1)
+chisqtestGC(table1)
+LGBTQfish <- fisher.test(table1)
+LGBTQfish
+```
+
+With this new set of information we can see that the p-value is 7e-07 which is an extremely low number that means the these results are unlikely to occur by chance. 
+
+The null hypothesis is accepted as the vaccine is extremely effective for the LGBTQ. 
+
+## Effectiveness Confidence Interval `r low`  to `r hi`
+
+```{r}
+effect <- LGBTQfish$p.value/(LGBTQfish$p.value +1)
+effectivenessLGBTQ = LGBTQfish$estimate/(LGBTQfish$estimate +1)*100
+print(effectivenessLGBTQ)
+```
+
+```{r}
+low=(LGBTQfish$conf.int[1]/(LGBTQfish$conf.int[1] +1))*100
+hi=(LGBTQfish$conf.int[2]/(LGTBQfish$conf.int[2] +1))*100
+options(digits=2)
+```
+
+Above is the effectiveness for the covid-19 for those who identified as gay.  If the effectiveness is above 50% that means that the vaccine is effective. Based on the interval seen above, we can conclude that the vaccine is effective in protecting people who identify as gay from getting covid-19. 
+
+The odds ratio is 80 which is way above 50 percent showing there is an 80 percent in effectiveness of the vaccine in those that identify as LGBTQ. 
 
 
 ## Druggies
 
+```{r}
+dd2 <-  DrugUser %>% group_by(infected,treatment) %>% summarize(count=n()) %>% mutate(prcnt=count/sum(count))
+
+
+# the group_by followed by summarize(count=n())
+
+basicC <- ggplot(dd2,aes(x=infected,y=count,fill=treatment))
+basicC + geom_bar(stat="identity",position="dodge")
+
+#Now for percentage plot
+
+basicCC <- ggplot(dd2,aes(x=infected,y=prcnt*100,fill=treatment)) 
+basicCC + geom_bar(stat="identity", position = "dodge")
+```
+
+This graph shows the grouping of people who are either covid 19 or ok and the split between either vaccine or placebo.
+
+With this graph we can see those with covid 19 and the vaccine have a higher infected percentile over those with the placebo which can be an estimated split of 10/90. 
+
+The ok group shows a slight split of placebo over vaccine with an estimated percentile of 55/45. 
+
+The codes that  create this plot start with the code block beginning with dd2. dd2 can be seen in the environment pane and if inspected contains 4 variables.These variables include infected, treatment, count, and prcent(stands for percent). The second group of codes is called the basicC. BasicC can also be seen in the environment pane and appears to contain a list of 9 variables. This information creates the first plot. The basicCC is the last bunch of codes and is also in the files pane. It also contains 9 variables and helps to create the percentage plot, the second plot.
+
+## Numerical Results 
+
+```{r}
+table1 <- xtabs(~infected + treatment, data= DrugUser)
+rowPerc(table1)
+colPerc(table1)
+```
+
+With the numerical results we get a more precise look at the data.
+
+We can see a split of 8.3/91.7 showing that 91.7 percent of drug users with the vaccine contract covid 19 compared to the 8.3 with the placebo. 
+
+## Inferential 
+
+```{r}
+chisq.test(table1)
+chisqtestGC(table1)
+DrugUserfish <- fisher.test(table1)
+DrugUserfish
+```
+
+With this we can see the p-value is 3e-12 which is an extremely low number showing that this is unlikely to occur by chance. 
+
+The null hypothesis is accepted against the the alternative. The drug is  ineffective in preventing the chances of getting covid-19 in drugusers.
+
+## Effectiveness Confidence Interval `r low`  to `r hi`
+
+```{r}
+effect <- DrugUserfish$p.value/(DrugUserfish$p.value +1)
+effectivenessDrugUser = DrugUserfish$estimate/(DrugUserfish$estimate +1)*100
+print(effectivenessDrugUser)
+```
+
+```{r}
+low=(DrugUserfish$conf.int[1]/(DrugUserfish$conf.int[1] +1))*100
+hi=(DrugUserfish$conf.int[2]/(DrugUuserfish$conf.int[2] +1))*100
+options(digits=2)
+```
+
+With the odd ration being 8 we can see this is clearly below 50 percent showing that the vaccine is extremelty ineffective in drug users. 
+
+The hallmark of an effective vaccine is 60% or better. This vaccine works horribly in protecting drug users from contracting covid-19.
+
 
 
 # Overall Results and Conclusions
+
+The covid-19 vaccine waseffective in protecting men against the contraction of the disease. The covid-19 effectiveness was `r effectivenessM`
+for men.
+The covid-19 vaccine was highly successful in protecting women against covid-19.The covid-19 effectiveness was `r effectivenessF`. women were protected the most with this particular vaccine.
+The covid-19 vaccine was  effective in treating people who identified as gay. The individuals who identified as gay and took the vaccine were two and a half times as less likely to get covid-19 than those taking the placebo.The covid-19 effectiveness was `r effectivenessLGBTQ` for gay individuals.
+The individuals that were drugusers were not effectively protected by the vaccine. The drugusers that took the vaccine were half as less likely to get covid-19 than those taking the placebo.The covid-19 effectiveness was `r effectivenessDrugUser` for drugusers.
+
+If you are a male or female or identify as gay it is  recommended to receive the vaccine. However, if you are a drug user, the vaccine was reported to have been ineffective.
+
+
+
+
+
