@@ -75,9 +75,9 @@ Mfish <- fisher.test(table1)
 Mfish
 ```
 
-This fisher test shows us the p-value is 2.2e-16 which is extremely small. Seeing this number means that these results are not likely to occur by chance. 
 
-## Effectiveness Confidence Interval `r low`  to `r hi`
+
+### Effectiveness Confidence Interval
 
 ```{r}
 effect <- Mfish$p.value/(Mfish$p.value +1)
@@ -219,7 +219,7 @@ With this new set of information we can see that the p-value is 7e-07 which is a
 
 The null hypothesis is accepted as the vaccine is extremely effective for the LGBTQ. 
 
-## Effectiveness Confidence Interval `r low`  to `r hi`
+## Effectiveness Confidence Interval 
 
 ```{r}
 effect <- LGBTQfish$p.value/(LGBTQfish$p.value +1)
@@ -227,11 +227,7 @@ effectivenessLGBTQ = LGBTQfish$estimate/(LGBTQfish$estimate +1)*100
 print(effectivenessLGBTQ)
 ```
 
-```{r}
-low=(LGBTQfish$conf.int[1]/(LGBTQfish$conf.int[1] +1))*100
-hi=(LGBTQfish$conf.int[2]/(LGTBQfish$conf.int[2] +1))*100
-options(digits=2)
-```
+
 
 Above is the effectiveness for the covid-19 for those who identified as gay.  If the effectiveness is above 50% that means that the vaccine is effective. Based on the interval seen above, we can conclude that the vaccine is effective in protecting people who identify as gay from getting covid-19. 
 
@@ -298,7 +294,7 @@ print(effectivenessDrugUser)
 
 ```{r}
 low=(DrugUserfish$conf.int[1]/(DrugUserfish$conf.int[1] +1))*100
-hi=(DrugUserfish$conf.int[2]/(DrugUuserfish$conf.int[2] +1))*100
+hi=(DrugUserfish$conf.int[2]/(DrugUserfish$conf.int[2] +1))*100
 options(digits=2)
 ```
 
